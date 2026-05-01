@@ -1,14 +1,44 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from uuid import uuid4
+from app.graph.builder import graph
+from app.schemas.request import ChatRequest,ResumeChatRequest
+from langgraph.types import Command
 
-router = APIRouter(tags=["Chat"])
-
-class ChatRequest(BaseModel):
-    message: str
+router = APIRouter()
 
 @router.post("/chat")
 async def chat(payload: ChatRequest):
-    return {
-        "query": payload.message,
-        "response": "Career advice generated here"
+    thread_id = str(uuid4())
+
+    config = {
+        "configurable": {
+            "thread_id": thread_id
+        }
     }
+
+    result = graph.invoke(
+        {"query": payload.message},
+        config=config
+    )
+
+    return {
+        "thread_id": thread_id,
+        "result": result
+    }
+
+
+@router.post("/chat/resume")
+async def resume_chat(payload: ResumeChatRequest):
+
+    config = {
+        "configurable": {
+            "thread_id": payload.thread_id
+        }
+    }
+
+    result = graph.invoke(
+        Command(resume=payload.message),
+        config=config
+    )
+
+    return result

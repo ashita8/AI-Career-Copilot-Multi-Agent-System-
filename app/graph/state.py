@@ -1,8 +1,8 @@
 from typing import TypedDict, Dict, Any
 
-class CareerState(TypedDict):
+class CareerState(TypedDict, total=False):
     query: str
-    goal: str
-    roadmap: str
-    skills_gap: str
-    final_response: str
+    goal_data: dict
+    needs_clarification: bool
+    clarification_questions: list[str]
+    user_answers: dict
