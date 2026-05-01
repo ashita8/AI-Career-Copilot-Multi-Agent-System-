@@ -7,7 +7,8 @@ class CareerState(TypedDict, total=False):
     jd_data: list[str]
     skill_gap_data: dict
     roadmap_data: dict
-
+    project_data: dict
+    
     needs_clarification: bool
     clarification_questions: list[str]
     user_answers: dict
