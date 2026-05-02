@@ -18,10 +18,12 @@ async def chat(payload: ChatRequest):
     }
 
     result = graph.invoke(
-        {"query": payload.message},
-        config=config
+    {
+        "message": payload.message,
+        "query": payload.message
+    },
+    config=config
     )
-    result = general_chat_agent(result)
     return {
         "thread_id": thread_id,
         "result": result

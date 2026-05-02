@@ -98,7 +98,7 @@ User reply:
 
 
 def goal_agent(state):
-    query = state["query"]
+    query = state.get("message") or state.get("query", "")
 
     # --------------------------------
     # Initial extraction
@@ -107,17 +107,17 @@ def goal_agent(state):
         structured_llm = llm.with_structured_output(GoalSchema)
 
         prompt = f"""
-Extract user career goal.
+        Extract user career goal.
 
-Rules:
-- Do NOT guess missing fields.
-- If timeline not present -> null
-- If background not present -> null
-- If level not present -> null
+        Rules:
+        - Do NOT guess missing fields.
+        - If timeline not present -> null
+        - If background not present -> null
+        - If level not present -> null
 
-User query:
-{query}
-"""
+        User query:
+        {query}
+        """
 
         result = structured_llm.invoke(prompt)
         data = result.model_dump()
