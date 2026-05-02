@@ -3,6 +3,7 @@ from uuid import uuid4
 from app.graph.builder import graph
 from app.schemas.request import ChatRequest,ResumeChatRequest
 from langgraph.types import Command
+from app.agents.supervisor import general_chat_agent
 
 router = APIRouter()
 
@@ -20,7 +21,7 @@ async def chat(payload: ChatRequest):
         {"query": payload.message},
         config=config
     )
-
+    result = general_chat_agent(result)
     return {
         "thread_id": thread_id,
         "result": result
