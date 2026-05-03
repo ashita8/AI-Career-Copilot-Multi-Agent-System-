@@ -1,8 +1,10 @@
+# app/graph/builder.py
+
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
 from app.graph.state import CareerState
-from app.graph.router import route_request
+from app.graph.router import route_request, route_request
 
 # Agents
 from app.agents.goal_agent import goal_agent
@@ -29,7 +31,7 @@ builder.add_node("resume_agent", resume_agent)
 builder.add_node("general_chat_agent", general_chat_agent)
 
 # -----------------------------------
-# START -> Router
+# START -> Main Router
 # -----------------------------------
 builder.add_conditional_edges(
     START,
@@ -44,7 +46,7 @@ builder.add_conditional_edges(
 )
 
 # -----------------------------------
-# Career Pipeline
+# Goal Career Pipeline
 # -----------------------------------
 builder.add_edge("goal_agent", "jd_research_node")
 builder.add_edge("jd_research_node", "skill_gap_agent")
@@ -53,14 +55,28 @@ builder.add_edge("roadmap_agent", "project_agent")
 builder.add_edge("project_agent", END)
 
 # -----------------------------------
+# Resume Agent -> Secondary Router
+# -----------------------------------
+builder.add_conditional_edges(
+    "resume_agent",
+    route_request,
+    {
+        "project_agent": "project_agent",
+        "skill_gap_agent": "skill_gap_agent",
+        "roadmap_agent": "roadmap_agent",
+        "end": END
+    }
+)
+
+# -----------------------------------
 # Direct End Nodes
 # -----------------------------------
-builder.add_edge("resume_agent", END)
 builder.add_edge("general_chat_agent", END)
 
-# Optional direct routes
+# Direct requests from start
 builder.add_edge("roadmap_agent", END)
 builder.add_edge("project_agent", END)
+builder.add_edge("skill_gap_agent", END)
 
 # -----------------------------------
 # Memory
