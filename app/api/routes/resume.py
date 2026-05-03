@@ -10,6 +10,7 @@ router = APIRouter()
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+
 @router.post("/resume/upload")
 async def upload_resume(
     file: UploadFile = File(...),
@@ -18,36 +19,39 @@ async def upload_resume(
     file_id = str(uuid.uuid4())
     file_path = f"{UPLOAD_DIR}/{file_id}.pdf"
 
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
+    try:
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
 
-    text = extract_text_from_pdf(file_path)
+        text = extract_text_from_pdf(file_path)
 
-    if message.strip():
+        if message.strip():
 
-        thread_id = str(uuid.uuid4())
+            thread_id = str(uuid.uuid4())
 
-        config = {
-            "configurable": {
-                "thread_id": thread_id
+            config = {
+                "configurable": {
+                    "thread_id": thread_id
+                }
             }
-        }
 
-        result = graph.invoke(
-            {
-                "message": message,
-                "resume_text": text
-            },
-            config=config
-        )
+            result = graph.invoke(
+                {
+                    "message": message,
+                    "resume_text": text
+                },
+                config=config
+            )
+
+            return {
+                "thread_id": thread_id,
+                "result": result
+            }
 
         return {
-            "thread_id": thread_id,
-            "file_id": file_id,
-            "result": result
+            "resume_text_preview": text
         }
 
-    return {
-        "file_id": file_id,
-        "resume_text_preview": text[:1500]
-    }
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
