@@ -1,11 +1,11 @@
 import json
 from datetime import datetime
 
-from app.db.models import Conversation
+from app.db.models import Conversation, Message
 
 
 # -----------------------------------
-# Get Conversation Row
+# Get Conversation
 # -----------------------------------
 def get_conversation(db, thread_id):
     return db.query(Conversation).filter(
@@ -14,16 +14,48 @@ def get_conversation(db, thread_id):
 
 
 # -----------------------------------
-# Load Previous State
+# Save Message
+# -----------------------------------
+def save_message(db, thread_id, role, content):
+
+    msg = Message(
+        thread_id=thread_id,
+        role=role,
+        content=content
+    )
+
+    db.add(msg)
+    db.commit()
+
+
+# -----------------------------------
+# Get Chat History
+# -----------------------------------
+def get_messages(db, thread_id):
+
+    return db.query(Message).filter(
+        Message.thread_id == thread_id
+    ).order_by(Message.created_at.asc()).all()
+
+
+# -----------------------------------
+# Get All Conversations
+# -----------------------------------
+def list_conversations(db):
+
+    return db.query(Conversation).order_by(
+        Conversation.updated_at.desc()
+    ).all()
+
+
+# -----------------------------------
+# Load State
 # -----------------------------------
 def load_state(db, thread_id):
 
     convo = get_conversation(db, thread_id)
 
-    if not convo:
-        return {}
-
-    if not convo.state_json:
+    if not convo or not convo.state_json:
         return {}
 
     try:
@@ -34,16 +66,16 @@ def load_state(db, thread_id):
 
 
 # -----------------------------------
-# Clean Non JSON Serializable Data
+# Clean State
 # -----------------------------------
 def clean_state(data):
 
     if isinstance(data, dict):
+
         cleaned = {}
 
         for k, v in data.items():
 
-            # remove internal graph keys
             if str(k).startswith("__"):
                 continue
 
@@ -61,7 +93,7 @@ def clean_state(data):
 
 
 # -----------------------------------
-# Save Updated State
+# Save State
 # -----------------------------------
 def save_state(db, thread_id, state):
 
@@ -71,15 +103,22 @@ def save_state(db, thread_id, state):
 
     payload = json.dumps(safe_state)
 
+    title = safe_state.get("message", "New Chat")[:60]
+
     if convo:
         convo.state_json = payload
         convo.updated_at = datetime.utcnow()
 
+        if not convo.title:
+            convo.title = title
+
     else:
         convo = Conversation(
             thread_id=thread_id,
+            title=title,
             state_json=payload
         )
+
         db.add(convo)
 
     db.commit()

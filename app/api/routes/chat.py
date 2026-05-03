@@ -7,7 +7,7 @@ from langgraph.types import Command
 from app.agents.supervisor import general_chat_agent
 
 from app.db.database import SessionLocal
-from app.db.crud import load_state, save_state
+from app.db.crud import load_state, save_state,save_message 
 
 import json
 
@@ -58,10 +58,16 @@ async def chat(payload: ChatRequest):
         else:
             thread_id = raw_thread_id
 
-        # Load old memory
+        # -----------------------------------
+        # SAVE USER MESSAGE
+        # -----------------------------------
+        save_message(db, thread_id, "user", payload.message)
+
+        # -----------------------------------
+        # LOAD OLD STATE
+        # -----------------------------------
         previous_state = load_state(db, thread_id)
 
-        # Merge new message
         state = {
             **previous_state,
             "message": payload.message
@@ -75,8 +81,17 @@ async def chat(payload: ChatRequest):
 
         result = graph.invoke(state, config=config)
 
-        # Save updated graph state
+        # -----------------------------------
+        # SAVE STATE
+        # -----------------------------------
         save_state(db, thread_id, result)
+
+        # -----------------------------------
+        # SAVE ASSISTANT MESSAGE
+        # -----------------------------------
+        assistant_reply = str(result)
+
+        save_message(db, thread_id, "assistant", assistant_reply)
 
         return {
             "thread_id": thread_id,
