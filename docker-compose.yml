@@ -1,14 +1,42 @@
 version: "3.9"
 
 services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    container_name: career_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./.env:/app/.env
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: career-navigator/Dockerfile
+    container_name: career_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
   postgres:
     image: postgres:16
-    container_name: career_copilot_db
-    restart: always
+    container_name: career_db
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: careercopilot
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: careercopilot
     ports:
       - "5433:5432"
     volumes:
