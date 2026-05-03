@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
 from app.graph.state import CareerState
-from app.graph.router import route_request, route_request
+from app.graph.router import route_request, route_request,route_after_resume
 
 # Agents
 from app.agents.goal_agent import goal_agent
@@ -59,7 +59,7 @@ builder.add_edge("project_agent", END)
 # -----------------------------------
 builder.add_conditional_edges(
     "resume_agent",
-    route_request,
+    route_after_resume,
     {
         "project_agent": "project_agent",
         "skill_gap_agent": "skill_gap_agent",
