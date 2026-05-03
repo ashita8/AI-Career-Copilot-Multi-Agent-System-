@@ -1,4 +1,4 @@
-from app.services.groq_client import llm
+from services.groq_client import llm
 
 # -----------------------------------
 # MAIN ROUTER (START)

@@ -1,5 +1,5 @@
-from app.services.groq_client import llm
-from app.schemas.project_schema import ProjectSchema
+from services.groq_client import llm
+from schemas.project_schema import ProjectSchema
 
 
 def project_agent(state):

@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from app.db.models import Conversation, Message
+from db.models import Conversation, Message
 
 
 # -----------------------------------

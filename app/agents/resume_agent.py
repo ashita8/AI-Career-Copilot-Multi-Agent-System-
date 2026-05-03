@@ -1,7 +1,7 @@
 # app/agents/resume_agent.py
 
-from app.services.groq_client import llm
-from app.schemas.resume_schema import ResumeSchema
+from services.groq_client import llm
+from schemas.resume_schema import ResumeSchema
 
 
 def resume_agent(state):
@@ -36,25 +36,28 @@ def resume_agent(state):
     # ----------------------------
     # If no resume uploaded
     # ----------------------------
-    if not resume_text.strip():
-        return {
-            "resume_data": {
-                "resume_score": "0/100",
-                "missing_sections": [
-                    "Resume PDF not uploaded"
-                ],
-                "missing_keywords": [],
-                "weak_bullets": [],
-                "rewritten_summary": "Please upload your resume PDF to receive personalized feedback.",
-                "top_projects_to_add": recommended_projects,
-                "ats_tips": [
-                    "Upload PDF resume first",
-                    "Use clean formatting",
-                    "Add measurable achievements"
-                ],
-                "final_verdict": "Resume not analyzed yet."
-            }
-        }
+ 
+    if not resume_text or not resume_text.strip():
+
+        return {}
+    #{
+            # "resume_data": {
+            #     "resume_score": "0/100",
+            #     "missing_sections": [
+            #         "Resume PDF not uploaded"
+            #     ],
+            #     "missing_keywords": [],
+            #     "weak_bullets": [],
+            #     "rewritten_summary": "Please upload your resume PDF to receive personalized feedback.",
+            #     "top_projects_to_add": recommended_projects,
+            #     "ats_tips": [
+            #         "Upload PDF resume first",
+            #         "Use clean formatting",
+            #         "Add measurable achievements"
+            #     ],
+            #     "final_verdict": "Resume not analyzed yet."
+            # }
+        #}
 
     # ----------------------------
     # Structured Output LLM

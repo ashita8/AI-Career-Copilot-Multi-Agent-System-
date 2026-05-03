@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.db.database import SessionLocal
-from app.db.crud import list_conversations, get_messages
+from db.database import SessionLocal
+from db.crud import list_conversations, get_messages
 
 router = APIRouter(prefix="/history", tags=["History"])
 

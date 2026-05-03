@@ -3,14 +3,11 @@
 from typing import Optional
 
 from pydantic import BaseModel,Field
+
 class ChatRequest(BaseModel):
-    thread_id: Optional[str] = Field(
-        default=None,
-        example=None
-    )
-    message: str = Field(
-        example="I want to become a GenAI Engineer"
-    )
+    thread_id: Optional[str] = None
+    message: str
+    resume_text: Optional[str] = None
 
 
 class ResumeChatRequest(BaseModel):

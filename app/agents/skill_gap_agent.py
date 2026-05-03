@@ -1,4 +1,4 @@
-from app.services.tavily_search import search_jobs
+from services.tavily_search import search_jobs
 
 def jd_research_node(state):
     role = state["goal_data"]["goal_title"]
@@ -13,8 +13,8 @@ def jd_research_node(state):
 
 # app/agents/skill_gap_agent.py
 
-from app.services.groq_client import llm
-from app.schemas.skill_gap_schema import SkillGapSchema
+from services.groq_client import llm
+from schemas.skill_gap_schema import SkillGapSchema
 
 
 def skill_gap_agent(state):

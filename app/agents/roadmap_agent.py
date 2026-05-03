@@ -1,5 +1,5 @@
-from app.services.groq_client import llm
-from app.schemas.roadmap_schema import RoadmapSchema
+from services.groq_client import llm
+from schemas.roadmap_schema import RoadmapSchema
 
 
 def roadmap_agent(state):

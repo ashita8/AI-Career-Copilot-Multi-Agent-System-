@@ -2,8 +2,8 @@ from fastapi import APIRouter, UploadFile, File, Form
 import os
 import uuid
 
-from app.services.pdf_parser import extract_text_from_pdf
-from app.graph.builder import graph
+from services.pdf_parser import extract_text_from_pdf
+from graph.builder import graph
 
 router = APIRouter()
 

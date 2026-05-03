@@ -1,6 +1,6 @@
 from langgraph.types import interrupt
-from app.services.groq_client import llm
-from app.schemas.goal_schema import GoalSchema,FollowupSchema
+from services.groq_client import llm
+from schemas.goal_schema import GoalSchema,FollowupSchema
 
 def needs_more_info(data):
     required = [

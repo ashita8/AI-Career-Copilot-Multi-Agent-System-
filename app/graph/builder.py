@@ -3,16 +3,16 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
-from app.graph.state import CareerState
-from app.graph.router import route_request, route_request,route_after_resume
+from graph.state import CareerState
+from graph.router import route_request, route_request,route_after_resume
 
 # Agents
-from app.agents.goal_agent import goal_agent
-from app.agents.skill_gap_agent import skill_gap_agent, jd_research_node
-from app.agents.roadmap_agent import roadmap_agent
-from app.agents.project_agent import project_agent
-from app.agents.resume_agent import resume_agent
-from app.agents.supervisor import general_chat_agent
+from agents.goal_agent import goal_agent
+from agents.skill_gap_agent import skill_gap_agent, jd_research_node
+from agents.roadmap_agent import roadmap_agent
+from agents.project_agent import project_agent
+from agents.resume_agent import resume_agent
+from agents.supervisor import general_chat_agent
 
 # -----------------------------------
 # Create Graph

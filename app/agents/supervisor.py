@@ -8,14 +8,14 @@
 from datetime import datetime
 from typing import Dict, Any
 
-from app.services.groq_client import llm
+from services.groq_client import llm
 
 # Specialized Agents
-from app.agents.goal_agent import goal_agent
-from app.agents.skill_gap_agent import skill_gap_agent
-from app.agents.roadmap_agent import roadmap_agent
-from app.agents.project_agent import project_agent
-from app.agents.resume_agent import resume_agent
+from agents.goal_agent import goal_agent
+from agents.skill_gap_agent import skill_gap_agent
+from agents.roadmap_agent import roadmap_agent
+from agents.project_agent import project_agent
+from agents.resume_agent import resume_agent
 
 
 # ==========================================================
